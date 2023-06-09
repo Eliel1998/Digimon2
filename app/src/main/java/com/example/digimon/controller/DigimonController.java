@@ -7,19 +7,22 @@ import android.util.Log;
 import com.example.digimon.entity.Digimon;
 import com.example.digimon.repository.DigimonRepository;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
 public class DigimonController {
-    public void linkDigimonTheLetterOfTheAlphabet(List<String> selectedAlphabetList) {
+    public static List<Digimon> selectedDigimons;
+    public Map<String, String> linkDigimonTheLetterOfTheAlphabet(List<String> selectedAlphabetList) {
 
         Map<String, String> letterImageUrlMap = new HashMap<>();
 
         int digimonCount = DigimonRepository.getDigimonsFromJson().size();
 
         Random random = new Random();
+        selectedDigimons = new ArrayList<>();
 
         for (String letter : selectedAlphabetList) {
             if (digimonCount > 0) {
@@ -28,6 +31,7 @@ public class DigimonController {
                 Digimon randomDigimon = DigimonRepository.getDigimonsFromJson().get(randomIndex);
 
                 letterImageUrlMap.put(letter, randomDigimon.getImg());
+                selectedDigimons.add(randomDigimon);
 
                 DigimonRepository.getDigimonsFromJson().remove(randomIndex);
 
@@ -43,6 +47,8 @@ public class DigimonController {
             String imageUrl = entry.getValue();
             Log.i(TAG, "vinculaDigimonALetraDoAlfabeto: Letter: " + letter + ", Image URL: " + imageUrl);
         }
+
+        return letterImageUrlMap;
 
     }
 }
