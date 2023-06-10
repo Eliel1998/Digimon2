@@ -14,7 +14,7 @@ public class FirebaseApplication extends Application {
         // Inicializa o Firebase
         FirebaseApp.initializeApp(this);
 
-//        // Habilita a persistência dos dados offline (opcional)
-//        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+       // Habilita a persistência dos dados offline
+       FirebaseDatabase.getInstance().setPersistenceEnabled(true);
     }
 }
