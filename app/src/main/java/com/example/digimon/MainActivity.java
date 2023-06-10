@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("image", imagem);
                 String digimonName = digimonController.selectedDigimons.get(position).getName();
                 System.out.println(digimonName + " <- nameeeee");
+                intent.putExtra("userName", editTextName.getText().toString());
                 intent.putExtra("digimonName", digimonName);
                 startActivity(intent);
             }

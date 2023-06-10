@@ -18,14 +18,23 @@ import android.widget.RadioGroup;
 import com.example.digimon.controller.DigimonController;
 import com.example.digimon.entity.Digimon;
 import com.example.digimon.service.DownloadImageTask;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.List;
 import java.util.Locale;
 
-public class DigimonActivity extends AppCompatActivity implements TextToSpeech.OnInitListener{
+public class DigimonActivity extends AppCompatActivity implements TextToSpeech.OnInitListener {
     ImageView imageViewDigimon;
     Button button;
     int vidas;
+    int score;
 
     private TextToSpeech textToSpeech;
 
@@ -33,24 +42,25 @@ public class DigimonActivity extends AppCompatActivity implements TextToSpeech.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_digimon);
+        FirebaseApp.initializeApp(getApplicationContext());
+
+        Intent intent = getIntent();
+        String userName = intent.getStringExtra("userName");
+        String image = intent.getStringExtra("image");
+        String digimonName = intent.getStringExtra("digimonName");
+
+        List<Digimon> selectedDigimon = DigimonController.selectedDigimons;
+        score = 0;
+        vidas = 3;
 
         textToSpeech = new TextToSpeech(this, this);
 
-
-        vidas = 3;
         ImageView icon1 = findViewById(R.id.icon1);
         ImageView icon2 = findViewById(R.id.icon2);
         ImageView icon3 = findViewById(R.id.icon3);
 
-
         RadioGroup radioGroup = findViewById(R.id.radioGroup);
         button = findViewById(R.id.btn);
-
-
-        Intent intent = getIntent();
-        String image = intent.getStringExtra("image");
-        List<Digimon> selectedDigimon = DigimonController.selectedDigimons;
-        String digimonName = intent.getStringExtra("digimonName");
 
         for (Digimon digimon : selectedDigimon) {
             RadioButton radioButton = new RadioButton(this);
@@ -62,11 +72,13 @@ public class DigimonActivity extends AppCompatActivity implements TextToSpeech.O
         new DownloadImageTask(imageViewDigimon).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, image);
 
         button.setOnClickListener(v -> {
+
             int selectedId = radioGroup.getCheckedRadioButtonId();
             RadioButton radioButton = findViewById(selectedId);
             String selectedDigimonName = radioButton.getText().toString();
             if (selectedDigimonName.equals(digimonName)) {
-                Log.d(TAG, "onCreate: " + "Correct");
+                score += 10;
+                new DigimonController().incrementPontuation(userName, score);
             } else {
                 Log.d(TAG, "onCreate: " + "Wrong");
                 vidas--;
@@ -88,19 +100,16 @@ public class DigimonActivity extends AppCompatActivity implements TextToSpeech.O
 
         });
 
-    }
-
-
+    }//onCreate
 
     @Override
     public void onInit(int status) {
         if (status == TextToSpeech.SUCCESS) {
-            // Definir o idioma de fala desejado (opcional)
+            // Define o idioma de fala desejado.
             int result = textToSpeech.setLanguage(Locale.getDefault());
             if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                 Log.e("TTS", "Idioma não suportado");
             } else {
-                // O TextToSpeech está pronto para ser utilizado
                 speak("Olá, bem-vindo ao TextToSpeech!");
             }
         } else {
@@ -117,7 +126,7 @@ public class DigimonActivity extends AppCompatActivity implements TextToSpeech.O
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // Libere recursos do TextToSpeech
+        // Encerrar o TextToSpeech
         if (textToSpeech != null) {
             textToSpeech.stop();
             textToSpeech.shutdown();

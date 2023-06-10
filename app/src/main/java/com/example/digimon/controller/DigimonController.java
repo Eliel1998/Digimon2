@@ -4,8 +4,12 @@ import static android.content.ContentValues.TAG;
 
 import android.util.Log;
 
+import com.example.digimon.FirebaseApplication;
 import com.example.digimon.entity.Digimon;
 import com.example.digimon.repository.DigimonRepository;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,5 +54,34 @@ public class DigimonController {
 
         return letterImageUrlMap;
 
+    }
+
+    public void gravaDadosFirebase(String userName) {
+        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference().child("scores");
+        String key = databaseRef.push().getKey();
+
+        String name = "Teste";
+        int score = 100;
+
+        // Cria um HashMap para armazenar os dados que serão gravados
+        Map<String, Object> scoreMap = new HashMap<>();
+        scoreMap.put("name", userName);
+        scoreMap.put("score", score);
+
+        // Grava os dados no Firebase
+        databaseRef.child(key).setValue(scoreMap);
+
+        System.out.println("Dados gravados com sucesso!");
+    }
+    public DatabaseReference getDatabaseReference() {
+        FirebaseApp app = FirebaseApp.getInstance();
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance(app);
+        return firebaseDatabase.getReference();
+    }
+
+    public String incrementPontuation(String userName, int score) {
+        DatabaseReference databaseReference = getDatabaseReference();
+        databaseReference.child("users").child(userName).child("score").setValue(score);
+        return "Score incrementado com sucesso!";
     }
 }

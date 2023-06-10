@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "159167112784",
+    "project_id": "digimon-635d7",
+    "storage_bucket": "digimon-635d7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:159167112784:android:7ef5ca3e3b7faf9ccf5355",
+        "android_client_info": {
+          "package_name": "com.example.digimon"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "159167112784-8u4m0jpgbmgkrefndqg1tkbikkpdq4vg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC3loBmNppwbPFoFFC7eZGymJAwLdZjuH4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "159167112784-8u4m0jpgbmgkrefndqg1tkbikkpdq4vg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
