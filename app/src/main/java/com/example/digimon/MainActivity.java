@@ -17,6 +17,8 @@ import com.example.digimon.controller.DigimonController;
 import com.example.digimon.repository.DigimonRepository;
 import com.example.digimon.service.DigimonApi;
 import com.example.digimon.service.RetrofitClient;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.FirebaseApp;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     Button buttonSubmit;
     EditText editTextName;
     ListView listView;
+    FloatingActionButton floatingActionButton;
     private static final String BASE_URL = "https://digimon-api.vercel.app/api/";
     DigimonController digimonController = new DigimonController();
     Map<String, String> letterImageUrlMap = new HashMap<>();
@@ -38,6 +41,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        FirebaseApp.initializeApp(getApplicationContext());
+        floatingActionButton = findViewById(R.id.fab);
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), HistoryActivity.class);
+                startActivity(intent);
+            }
+        });
 
         buttonSubmit = findViewById(R.id.buttonSubmit);
         editTextName = findViewById(R.id.editTextName);

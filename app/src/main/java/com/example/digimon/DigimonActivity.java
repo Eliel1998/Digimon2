@@ -45,7 +45,6 @@ public class DigimonActivity extends AppCompatActivity implements TextToSpeech.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_digimon);
-        FirebaseApp.initializeApp(getApplicationContext());
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
         Intent intent = getIntent();
