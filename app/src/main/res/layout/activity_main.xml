@@ -16,13 +16,12 @@
 
         <EditText
             android:id="@+id/editTextName"
+            style="@style/EditTextStyle"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:hint="Digite seu nome"
-            android:inputType="textPersonName"
-            android:maxLines="1"
-            android:padding="8dp" />
+            android:inputType="textPersonName" />
+
 
         <Button
             android:id="@+id/buttonSubmit"
@@ -38,6 +37,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        style="@style/Widget.AppCompat.Light.ListView.DropDown"
         android:layout_marginTop="16dp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -45,8 +45,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
-        android:layout_margin="16dp"
-        app:srcCompat="@drawable/ic_launcher_foreground"
+        android:layout_margin="10dp"
+        app:srcCompat="@drawable/score"
         />
 
 </LinearLayout>

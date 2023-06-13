@@ -4,4 +4,6 @@
     <color name="white">#FFFFFFFF</color>
     <color name="primary_text">#000000</color>
     <color name="secondary_text">#808080</color>
+    <color name="edittext_background_color">#F5F5F5</color>
+    <color name="edittext_text_color">#333333</color>
 </resources>

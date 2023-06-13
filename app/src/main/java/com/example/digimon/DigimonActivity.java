@@ -142,7 +142,7 @@ public class DigimonActivity extends AppCompatActivity implements TextToSpeech.O
     private void showCongratulationsDialog(int score) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Parabéns, você acertou!")
-                .setMessage("Você já possui " + score + " pontos.")
+                .setMessage("Você conquistou 10 pontos.")
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         finish();
