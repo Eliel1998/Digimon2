@@ -15,17 +15,14 @@ public class HistoryActivity extends AppCompatActivity {
 
     ListView listView;
     DatabaseReference databaseReference;
-    DigimonController digimonController;
+    DigimonController digimonController = new DigimonController();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_history);
         listView = findViewById(R.id.listViewRanking);
-        digimonController = new DigimonController();
         databaseReference = FirebaseDatabase.getInstance().getReference();
-        digimonController.getUsers(databaseReference);
-        UserAdapter userAdapter = new UserAdapter(this, DigimonController.usersList);
-        listView.setAdapter(userAdapter);
+        digimonController.getUsers(databaseReference, listView,this);
     }
 }

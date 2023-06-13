@@ -2,8 +2,12 @@ package com.example.digimon.controller;
 
 import static android.content.ContentValues.TAG;
 
+import android.content.Context;
 import android.util.Log;
+import android.widget.Adapter;
+import android.widget.ListView;
 
+import com.example.digimon.adapter.UserAdapter;
 import com.example.digimon.entity.Digimon;
 import com.example.digimon.entity.User;
 import com.example.digimon.repository.DigimonRepository;
@@ -105,11 +109,10 @@ public class DigimonController {
         });
     }
 
-    public void getUsers(DatabaseReference databaseReference) {
+    public void getUsers(DatabaseReference databaseReference, ListView listView, Context context) {
         databaseReference.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
                 usersList = new ArrayList<>();
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                     String userName = userSnapshot.getKey();
@@ -118,10 +121,11 @@ public class DigimonController {
                     usersList.add(user);
                 }
                 sortUsersByScore(usersList);
-                for (User user : usersList) {
-                    Log.d("Firebase", "Usuário: " + user.getUserName() + ", Score: " + user.getScore());
-                }
+                UserAdapter userAdapter = new UserAdapter(context, usersList);
+                userAdapter.notifyDataSetChanged();
+                listView.setAdapter(userAdapter);
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 Log.e("Firebase", "Erro ao obter os dados: " + databaseError.getMessage());
