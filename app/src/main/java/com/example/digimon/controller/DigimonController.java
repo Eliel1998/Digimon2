@@ -13,6 +13,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,6 +22,7 @@ import java.util.Random;
 
 public class DigimonController {
     public static List<Digimon> selectedDigimons;
+    public static List<User> usersList = new ArrayList<>();
 
     public Map<String, String> linkDigimonTheLetterOfTheAlphabet(List<String> selectedAlphabetList) {
 
@@ -107,24 +110,32 @@ public class DigimonController {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                List<User> userList = new ArrayList<>();
+                usersList = new ArrayList<>();
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                     String userName = userSnapshot.getKey();
                     Long score = userSnapshot.child("score").getValue(Long.class);
                     User user = new User(userName, score);
-                    userList.add(user);
+                    usersList.add(user);
                 }
-
-                for (User user : userList) {
+                sortUsersByScore(usersList);
+                for (User user : usersList) {
                     Log.d("Firebase", "Usuário: " + user.getUserName() + ", Score: " + user.getScore());
                 }
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                // Ocorreu um erro ao obter os dados do banco de dados
                 Log.e("Firebase", "Erro ao obter os dados: " + databaseError.getMessage());
             }
         });
 
+    }
+
+    public void sortUsersByScore(List<User> usersList) {
+        Collections.sort(usersList, new Comparator<User>() {
+            @Override
+            public int compare(User user1, User user2) {
+                return Long.compare(user1.getScore(), user2.getScore());
+            }
+        });
     }
 }
