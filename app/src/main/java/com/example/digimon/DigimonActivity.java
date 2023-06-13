@@ -2,8 +2,10 @@ package com.example.digimon;
 
 import static android.content.ContentValues.TAG;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -37,12 +39,14 @@ public class DigimonActivity extends AppCompatActivity implements TextToSpeech.O
     int score;
 
     private TextToSpeech textToSpeech;
+    DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_digimon);
         FirebaseApp.initializeApp(getApplicationContext());
+        databaseReference = FirebaseDatabase.getInstance().getReference();
 
         Intent intent = getIntent();
         String userName = intent.getStringExtra("userName");
@@ -78,29 +82,33 @@ public class DigimonActivity extends AppCompatActivity implements TextToSpeech.O
             String selectedDigimonName = radioButton.getText().toString();
             if (selectedDigimonName.equals(digimonName)) {
                 score += 10;
-                new DigimonController().incrementPontuation(userName, score);
+                new DigimonController().incrementPontuation(userName, score, databaseReference);
+                showCongratulationsDialog(score);
             } else {
-                Log.d(TAG, "onCreate: " + "Wrong");
-                vidas--;
-
-                switch (vidas) {
-                    case 2:
-                        icon1.setVisibility(View.INVISIBLE);
-                        break;
-                    case 1:
-                        icon2.setVisibility(View.INVISIBLE);
-                        break;
-                    case 0:
-                        icon3.setVisibility(View.INVISIBLE);
-                        String mensagem = "Você perdeu todas as suas vidas!";
-                        speak(mensagem);
-                        break;
-                }
+                decreaseLives(icon1, icon2, icon3);
             }
 
         });
 
     }//onCreate
+
+    private void decreaseLives(ImageView icon1,ImageView icon2,ImageView icon3) {
+        vidas--;
+        switch (vidas) {
+            case 2:
+                icon1.setVisibility(View.INVISIBLE);
+                break;
+            case 1:
+                icon2.setVisibility(View.INVISIBLE);
+                break;
+            case 0:
+                icon3.setVisibility(View.INVISIBLE);
+                String mensagem = "Você perdeu todas as suas vidas!";
+                speak(mensagem);
+                break;
+        }
+    }
+
 
     @Override
     public void onInit(int status) {
@@ -126,10 +134,24 @@ public class DigimonActivity extends AppCompatActivity implements TextToSpeech.O
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // Encerrar o TextToSpeech
         if (textToSpeech != null) {
             textToSpeech.stop();
             textToSpeech.shutdown();
         }
     }
+
+    private void showCongratulationsDialog(int score) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Parabéns, você acertou!")
+                .setMessage("Você já possui " + score + " pontos.")
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        finish();
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
 }
