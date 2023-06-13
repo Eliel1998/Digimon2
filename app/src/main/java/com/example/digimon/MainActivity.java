@@ -109,9 +109,6 @@ public class MainActivity extends AppCompatActivity {
         // Crie um Intent para iniciar o BroadcastReceiver
         Intent intent = new Intent(this, MyBroadcastReceiver.class);
 
-        // Defina uma ação personalizada para o Intent (opcional)
-        intent.setAction("com.example.myapp.ACTION_ALARM");
-
         // Adicione a flag FLAG_MUTABLE ao PendingIntent
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
 

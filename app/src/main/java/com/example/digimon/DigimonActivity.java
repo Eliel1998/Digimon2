@@ -49,7 +49,7 @@ public class DigimonActivity extends AppCompatActivity implements TextToSpeech.O
 
     private TextToSpeech textToSpeech;
     DatabaseReference databaseReference;
-    String userName="";
+    String userName = "";
 
     private static final String CHANNEL_ID = "1";
     private static int NOTIFICATION_ID = 1;
@@ -97,7 +97,6 @@ public class DigimonActivity extends AppCompatActivity implements TextToSpeech.O
                 new DigimonController().incrementPontuation(userName, score, databaseReference);
                 showCongratulationsDialog(score);
             } else {
-                gerar();
                 decreaseLives(icon1, icon2, icon3);
             }
 
@@ -105,7 +104,7 @@ public class DigimonActivity extends AppCompatActivity implements TextToSpeech.O
 
     }//onCreate
 
-    private void decreaseLives(ImageView icon1,ImageView icon2,ImageView icon3) {
+    private void decreaseLives(ImageView icon1, ImageView icon2, ImageView icon3) {
         vidas--;
         switch (vidas) {
             case 2:
@@ -118,6 +117,7 @@ public class DigimonActivity extends AppCompatActivity implements TextToSpeech.O
                 icon3.setVisibility(View.INVISIBLE);
                 String mensagem = "Você perdeu todas as suas vidas!";
                 speak(mensagem);
+                tryAgain(icon1, icon2, icon3);
                 break;
         }
     }
@@ -131,7 +131,7 @@ public class DigimonActivity extends AppCompatActivity implements TextToSpeech.O
             if (result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED) {
                 Log.e("TTS", "Idioma não suportado");
             } else {
-                speak("Olá, boa sorte no jogo " + userName );
+                speak("Olá, boa sorte no jogo " + userName);
             }
         } else {
             Log.e("TTS", "Inicialização falhou");
@@ -158,7 +158,7 @@ public class DigimonActivity extends AppCompatActivity implements TextToSpeech.O
         notificationManager.notify(NOTIFICATION_ID, builder.build());
     }
 
-    private void criarCanal(){
+    private void criarCanal() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "Inicio do jogo";
             String description = "Voce tem 3 vidas e 10 pontos por acerto";
@@ -185,6 +185,28 @@ public class DigimonActivity extends AppCompatActivity implements TextToSpeech.O
         builder.setTitle("Parabéns, você acertou!")
                 .setMessage("Você conquistou 10 pontos.")
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        finish();
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void tryAgain(ImageView icon1, ImageView icon2, ImageView icon3) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Atenção")
+                .setMessage("Voce perdeu, deseja tentar novamente?")
+                .setPositiveButton("Sim", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        vidas = 3;
+                        icon1.setVisibility(View.VISIBLE);
+                        icon2.setVisibility(View.VISIBLE);
+                        icon3.setVisibility(View.VISIBLE);
+                    }
+                })
+                .setNegativeButton("Não", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         finish();
                     }
