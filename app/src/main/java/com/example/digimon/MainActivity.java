@@ -2,7 +2,12 @@ package com.example.digimon;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -42,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         FirebaseApp.initializeApp(getApplicationContext());
+        setAlarm();
         floatingActionButton = findViewById(R.id.fab);
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,7 +88,10 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Object item = parent.getItemAtPosition(position);
                 String imagem = letterImageUrlMap.get(item).toString();
-                Intent intent = new Intent(MainActivity.this, DigimonActivity.class);
+                Intent intent = null;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                    intent = new Intent(MainActivity.this, DigimonActivity.class);
+                }
                 intent.putExtra("image", imagem);
                 String digimonName = digimonController.selectedDigimons.get(position).getName();
                 intent.putExtra("userName", editTextName.getText().toString());
@@ -92,4 +101,35 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }//end of onCreate
+
+    private void setAlarm() {
+        // Obtenha uma instância do AlarmManager
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+        // Crie um Intent para iniciar o BroadcastReceiver
+        Intent intent = new Intent(this, MyBroadcastReceiver.class);
+
+        // Defina uma ação personalizada para o Intent (opcional)
+        intent.setAction("com.example.myapp.ACTION_ALARM");
+
+        // Adicione a flag FLAG_MUTABLE ao PendingIntent
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_MUTABLE);
+
+        // Defina o tempo em que o alarme deve ser acionado (por exemplo, daqui a 5 segundos)
+        long triggerTime = System.currentTimeMillis() + 5000;
+
+        // Defina o alarme usando o AlarmManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent);
+        } else {
+            alarmManager.set(AlarmManager.RTC_WAKEUP, triggerTime, pendingIntent);
+        }
+
+        Toast.makeText(this, "Alarme definido", Toast.LENGTH_SHORT).show();
+    }
+
+
 }
+

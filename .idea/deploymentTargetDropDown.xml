@@ -6,12 +6,12 @@
         <type value="RUNNING_DEVICE_TARGET" />
         <deviceKey>
           <Key>
-            <type value="VIRTUAL_DEVICE_PATH" />
-            <value value="$USER_HOME$/.android/avd/7.4_Rollable_API_31.avd" />
+            <type value="SERIAL_NUMBER" />
+            <value value="192.168.63.106:5555" />
           </Key>
         </deviceKey>
       </Target>
     </runningDeviceTargetSelectedWithDropDown>
-    <timeTargetWasSelectedWithDropDown value="2023-06-13T17:07:48.397923Z" />
+    <timeTargetWasSelectedWithDropDown value="2023-06-13T17:47:22.707802Z" />
   </component>
 </project>
